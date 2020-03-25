@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Order
+        
+{% endblock %}
+
+{% block body %}
+
+<!-- Here we notify the user of their addition to the shopping cart.  -->
+{% if message != '' %}
+        <div class="alert alert-warning" role="alert">
+            <p>{{ message }}<a href="{{ url_for('shop' )}}" class="alert-link"> Shopping Cart</a>!</p>
+          </div>
+{% endif %}
+
+<div class="row">
+    <div class="col">
+
+        <p>Take a look at the menu down here.</p>
+
+
+        <!-- We loop over all the items in the menu and create tables per type.  -->
+        {% for type in menudict %}
+            <h2>{{ type }}</h2>
+
+            {% if type == "Pizza" %}
+                <p>Every pizza has a base of cheese and can have up to 3 toppings.</p>
+                <p>The <font color="red">Special</font> pizza recipe is based around an ancient foreign delicacy.</p>
+            {% endif %}
+
+            {% if type == "Sub" %}
+                <p>Every sub can be ordered with extra cheese (+ $0.50).</p>
+                <p>Extra toppings for the steak can be found below (+ $0.50).</p>
+            {% endif %}
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        {% if type in ["Pizza","Sub","Dinner Platters"] %}
+                            <th></th>
+                            <th>Small</th>
+                            <th>Large</th>
+                        {% endif %}
+                        {% if type == "Extras" %}
+                            <th></th>
+                            <th>Price</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in menudict[type] %}    
+                        <tr>
+                            {% for name in item %}
+                                <td>{{ name }}</td>
+                                <td>{{ item[name][0] }}</td>
+                                <td>{{ item[name][1] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>  
+            </table>
+        {% endfor %}
+    </div>
+
+
+    <!-- We loop over all menu items and add dropdown menu's and order buttons for the items and toppings per category.  -->
+    
+    <!-- The first part is just for the pizza's since they are the hardest to deal with.  -->
+    <div class="col">
+        <p>Place an order down here.</p>
+        {% for item in orderdict %}
+            {% if item == "Pizza" %}
+                <h2>{{ item }}</h2>
+                <p>Every pizza has a base of cheese and can have up to 3 toppings.</p>
+                <p>The <font color="red">Special</font> pizza recipe is based around an ancient foreign delicacy.</p>
+                {% for entry in orderdict[item] %} 
+                    {% for name in entry %}  
+                        <form id="box" action="{{ url_for('order') }}" method="post">
+                            <h5>{{ name }}</h5>
+                            <select id="size" name={{item}}>
+                                <option value="{{name}};small">Small</option>
+                                <option value="{{name}};large">Large</option>
+                            </select>
+                            {% for x in range(3) %} 
+                            <select id="{{ ('top' + x|string) }}" name="{{ ('top' + x|string) }}">
+                                <option value="No topping">No topping</option>
+                                {% for top in orderdict["Topping"] %}
+                                    {% for name in top %}
+                                    <option value="{{name}}">{{name}}</option>
+                                    {% endfor %}
+                                {% endfor %}
+                            </select>
+                            {% endfor %}
+                            <p></p>
+                            <button>Add to cart</button>
+                            <button name='special' value='special'>Add Special</button>
+                            
+                        </form>
+                        <br>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            
+            <!-- Then we handle the rest of the items  -->
+            {% if item not in ["Pizza","Topping", "Steak Topping"] %}
+            
+                <h2>{{ item }}</h2>
+
+                {% if item == "Sub" %}
+                <p>Every sub can be ordered with extra cheese (+ $0.50).</p>
+                <p>Extra toppings for the steak can be found below (+ $0.50).</p>
+                {% endif %}
+
+                {% for entry in orderdict[item] %} 
+                        {% for name in entry %}  
+                            <form id="box" action="{{ url_for('order') }}" method="post">
+                                <h5>{{ name }}</h5>
+
+                                {% if item != "Extras" %}
+                                <select id="size" name={{item}}>
+                                    <option value="{{name}};small">Small</option>
+                                    <option value="{{name}};large">Large</option>
+                                </select>
+                                {% endif %}
+
+                                {% if item == "Sub" %}
+                                <select id="cheese" name="cheese">
+                                    <option value="No topping">No topping</option>
+                                    <option value="Cheese">Extra cheese</option>
+                                </select>
+                                {% endif %}
+
+                                {% if name in ["Steak", "Steak + Cheese"] %}
+                                <select id="top" name="top">
+                                    <option value="No topping">No topping</option>
+                                    {% for topping in orderdict["Steak Topping"] %}
+                                        {% for name in topping %}
+                                            <option value='{{name}}'>{{name}}</option>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                                <p></p>
+                                {% if item == "Extras" %}
+                                <button name={{item}} value='{{name}}'>Add to cart</button>
+                                {% else %}
+                                <button>Add to cart</button>
+                                {% endif %}
+
+                            </form>
+                            <br>
+                        {% endfor %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

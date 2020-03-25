@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Menu
+{% endblock %}
+
+{% block body %}
+
+<p>This is our menu!</p>
+
+<div class="row">
+    <div class="col">
+
+        <!-- We loop over all the items in the menu and create tables per type.  -->
+        {% for type in menudict %}
+            <h2>{{ type }}</h2>
+
+            {% if type == "Pizza" %}
+                <p>Every pizza has a base of cheese and can have up to 3 toppings.</p>
+                <p>The <font color="red">Special</font> pizza recipe is based around an ancient foreign delicacy.</p>
+            {% endif %}
+
+            {% if type == "Sub" %}
+                <p>Extra toppings for the steak can be found below.</p>
+            {% endif %}
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        {% if type in ["Pizza","Sub","Dinner Platters"] %}
+                            <th></th>
+                            <th>Small</th>
+                            <th>Large</th>
+                        {% endif %}
+                        {% if type == "Extras" %}
+                            <th></th>
+                            <th>Price</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in menudict[type] %}    
+                        <tr>
+                            {% for name in item %}
+                                <td>{{ name }}</td>
+                                <td>{{ item[name][0] }}</td>
+                                <td>{{ item[name][1] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>  
+            </table>
+        {% endfor %}
+
+    </div>
+
+    <div class="col">
+    </div>
+</div>
+
+{% endblock %}

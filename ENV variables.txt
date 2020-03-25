@@ -1,0 +1,7 @@
+SECRET_KEY='\x81_h\xa0\tU\x92\xad~\x89\xd6\xce\x1a;$\xd27\x12\xb9\xfe\xcc\x7f\x12'
+
+EMAIL_USER=pizzawebapp69@gmail.com
+
+EMAIL_PASS=#pizzapizza123
+
+DATABASE_URL=postgres://dyaioefjplfbgl:9ac058be13ef339034ed763fef3d667152c3c17888eb31da720baae33f8e9cc2@ec2-54-195-247-108.eu-west-1.compute.amazonaws.com:5432/d4a4je3uute2di

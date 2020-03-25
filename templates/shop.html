@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+    Shopping cart
+{% endblock %}
+
+{% block body %}
+    
+
+    {% if items != [] %}
+
+
+    <!-- Here we create the table containing all the items in the user's shoppingcart.  -->
+    <p>Check your shopping cart below!</p>
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                    <th>Dish</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Toppings</th>
+                    <th>Total</th>
+            </tr>
+        </thead>
+        <tbody> 
+
+            {% for item in items %}
+            <tr>
+                    <td>{{item.item_name}}</td>
+                    <td>{{item.size}}</td>
+                    <td>{{item.money}}</td>
+                    {% if item.toppings == None %}
+                    <td></td>
+                    {% else %}
+                    <td>{{item.toppings}}</td>
+                    {% endif %}
+                    <td></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{total}}</td>
+            </tr>
+
+        </tbody>  
+    </table>
+
+    <div class='row'>
+    <div class='col'>
+    <form action="{{ url_for('shop') }}" method="post">
+    <button name='clear' value='clear'>Clear Cart</button>
+    </form>
+    </div>
+
+    <div class='col'>
+        <form action="{{ url_for('shop') }}" method="post">
+            <button name='send' value='send'>Place order</button>
+        </form>
+    </div>
+    </div>
+    {% else %}
+    <p>Add some items to your cart first!</p>
+    {% endif %}
+
+{% endblock %}
